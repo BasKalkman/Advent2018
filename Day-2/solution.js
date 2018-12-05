@@ -45,25 +45,21 @@ fs.readFile('./input.txt', 'utf8', (err, data2) => {
   var arr2 = data2.split('\r\n');
 
   arr2.forEach(item => {
-    let a = '';
-    let b = '';
+    let positionDiff = 0;
 
     arr2.forEach(check => {
       let countDiff = 0;
       for (let i = 0; i < item.length; i++) {
         if (item[i] !== check[i]) {
+          positionDiff = i;
           countDiff++;
         }
       }
       if (countDiff === 1) {
-        a = item;
-        b = check;
+        let result = item.split('');
+        result.splice(positionDiff, 1);
+        console.log('item: ', result.join(''));
       }
     });
-
-    if (a.length > 0) {
-      console.log(a);
-      console.log(b);
-    }
   });
 });
