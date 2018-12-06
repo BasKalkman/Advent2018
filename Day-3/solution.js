@@ -45,8 +45,30 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
       }
     }
   }
-  console.log(map);
   console.log(count);
+
+  // PART 2
+  // Check the map for one claim that never overlaps
+
+  claims.forEach(claim => {
+    let x = claim.coords[0];
+    let y = claim.coords[1];
+    let w = claim.size[0];
+    let h = claim.size[1];
+    let countOverlap = 0;
+
+    for (let i = y; i <= y + h - 1; i++) {
+      for (let j = x; j <= x + w - 1; j++) {
+        if (map[i][j] != 1) {
+          countOverlap++;
+        }
+      }
+    }
+
+    if (countOverlap === 0) {
+      console.log(claim.id);
+    }
+  });
 });
 
 function createMap() {
