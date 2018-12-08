@@ -94,8 +94,6 @@ function asleepMost() {
   // Guard that sleeps most
   console.log('Guard ID: ', guardObservations[0].id);
 
-  // guardObservations.forEach(guard => console.log(guard));
-
   // Which minute?
   let temp = {};
   let minute = guardObservations[0].asleep;
@@ -114,5 +112,30 @@ function asleepMost() {
 }
 
 asleepMost();
-
+console.log('----------Part 2----------');
 // PART 2
+
+function whichMinuteMost() {
+  let minuteMost = 0;
+  let minuteCheck = 0;
+  let guardMost = 0;
+
+  guardObservations.forEach(guard => {
+    let minutes = {};
+    for (let i = 0; i < guard.asleep.length; i++) {
+      if (!minutes[guard.asleep[i]]) {
+        minutes[guard.asleep[i]] = 0;
+      }
+      minutes[guard.asleep[i]]++;
+      if (minutes[guard.asleep[i]] > minuteCheck) {
+        minuteCheck = minutes[guard.asleep[i]];
+        minuteMost = guard.asleep[i];
+        guardMost = guard.id;
+      }
+    }
+  });
+  console.log('Guard ID: ', guardMost);
+  console.log('Minute slept most: ', minuteMost);
+  console.log('result: ', parseInt(guardMost) * parseInt(minuteMost));
+}
+whichMinuteMost();
