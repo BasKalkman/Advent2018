@@ -23,7 +23,9 @@ function parseTree() {
   // Part 1: Write metadata values to array
   obj.metadata.forEach(item => metadata.push(item));
 
-  // Part 2: Assign a value to the node, based on children
+  // Part 2: Assign a value to the node, based on children.
+  // If there are no children. Sum of metadata
+  // If there are: Metadata are indexes, value is the value of children at those indexes
   obj.value = 0;
   if (obj.child.length === 0) {
     obj.value = obj.metadata.reduce((a, c) => {
