@@ -15,3 +15,17 @@ const data = fs
     };
     return obj;
   });
+
+// Manual test for where smallest area is: 10036
+for (let i = 10020; i < 10040; i++) {
+  let tmp = [];
+  data.forEach(el => {
+    tmp.push(el.y + i * el.vY);
+  });
+  console.log('----------------------');
+  console.log('Time: ', i);
+  console.log('Min value: ', Math.min(...tmp));
+  console.log('Max value: ', Math.max(...tmp));
+  console.log('Diff: ', Math.max(...tmp) - Math.min(...tmp));
+  console.log('----------------------');
+}
