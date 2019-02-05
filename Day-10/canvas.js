@@ -15,10 +15,13 @@ let data = fetch('./input.txt')
     });
     return tmp;
   })
-  .then(data => console.log(data));
+  .then(data => {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    let time = 10036;
+    data.forEach(el => {
+      ctx.fillRect(el.x + time * el.vX, el.y + time * el.vY, 2, 2);
+    });
+  });
 
 // Canvas
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext('2d');
-ctx.fillRect(1, 1, 10, 10);
-ctx.fillRect(40, 40, 10, 10);
