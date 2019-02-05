@@ -1,39 +1,26 @@
 var fs = require('fs');
 
+const data = fs
+  .readFileSync('./input.txt', { encoding: 'utf8' })
+  .split('\r\n')
+  .map(Number);
+
 // PART ONE
-fs.readFile('./input.txt', 'utf8', (err, contents) => {
-  const frequencyChanges = contents.split('\r\n');
+const part1 = data.reduce((a, c) => {
+  return a + c;
+}, 0);
 
-  let result = frequencyChanges
-    .map(item => parseInt(item))
-    .reduce((acc, change) => {
-      return acc + change;
-    }, 0);
-
-  console.log(result);
-});
+console.log('Part 1: ', part1);
 
 // PART 2
-fs.readFile('./input.txt', 'utf8', (err, data) => {
-  let arr = data.split('\r\n').map(item => parseInt(item));
+let frequency = 0;
+let map = new Map();
+let i = 0;
 
-  let i = 0;
-  let frequency = 0;
-  let repeat = false;
-  let freqArr = [0];
+while (!map.has(frequency)) {
+  map.set(frequency, map.size);
+  frequency += data[i % data.length];
+  i++;
+}
 
-  while (repeat === false) {
-    if (!arr[i]) {
-      i = 0;
-    }
-    frequency += arr[i];
-
-    if (freqArr.indexOf(frequency) === -1) {
-      freqArr.push(frequency);
-      i++;
-    } else {
-      repeat = true;
-    }
-  }
-  console.log(frequency);
-});
+console.log('Part 2: ', frequency);
