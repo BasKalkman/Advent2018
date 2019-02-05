@@ -34,3 +34,29 @@ for (let x = 1; x <= 298; x++) {
 console.log('Part 1: ', coords);
 
 // Part 2
+let size = 1;
+let maxPart2 = 0;
+let coordsPart2 = '';
+
+while (size <= 300) {
+  for (let x = 1; x <= 301 - size; x++) {
+    for (let y = 1; y <= 301 - size; y++) {
+      let num = 0;
+
+      for (let dx = 0; dx < size; dx++) {
+        for (let dy = 0; dy < size; dy++) {
+          num += getPower(x + dx, y + dy);
+        }
+      }
+
+      if (num > maxPart2) {
+        maxPart2 = num;
+        coordsPart2 = `${x},${y},${size}`;
+        console.log(maxPart2, coordsPart2);
+      }
+    }
+  }
+  size++;
+}
+
+console.log('Part 2: ', coordsPart2);
