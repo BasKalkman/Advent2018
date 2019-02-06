@@ -13,7 +13,17 @@ fs.readFileSync('./input.txt', { encoding: 'utf8' })
   });
 
 let currentState = initialState.split('');
+let negSize = 0;
+
 for (let j = 0; j < 20; j++) {
+  while (currentState.slice(0, 3).join('') !== '...') {
+    currentState.unshift('.');
+    negSize++;
+  }
+  while (currentState.slice(currentState.length - 3).join('') !== '...') {
+    currentState.push('.');
+  }
+
   let newState = [];
   //Run instruction
   for (let i = 0; i < currentState.length; i++) {
@@ -36,7 +46,7 @@ for (let j = 0; j < 20; j++) {
 let count = 0;
 for (let i = 0; i < currentState.length; i++) {
   if (currentState[i] === '#') {
-    count += i;
+    count += i - negSize;
   }
 }
 
