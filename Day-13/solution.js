@@ -8,23 +8,26 @@ class Cart {
         this.y = y;
         this.dir = dir;
         this.turnCount = 0;
+        this.alive = true;
     }
 
     move() {
-        if (this.dir === '^') {
-            this.y--;
+        if (this.alive === true) {
+            if (this.dir === '^') {
+                this.y--;
+            }
+            if (this.dir === 'v') {
+                this.y++;
+            }
+            if (this.dir === '<') {
+                this.x--;
+            }
+            if (this.dir === '>') {
+                this.x++;
+            }
+            this.checkCurve();
+            this.turnAtIntersection();
         }
-        if (this.dir === 'v') {
-            this.y++;
-        }
-        if (this.dir === '<') {
-            this.x--;
-        }
-        if (this.dir === '>') {
-            this.x++;
-        }
-        this.checkCurve();
-        this.turnAtIntersection();
     }
 
     checkCurve() {
@@ -103,7 +106,7 @@ class Cart {
 }
 
 // Init all carts
-const carts = [];
+let carts = [];
 
 data.forEach((line, yPos) => {
     for (let xPos = 0; xPos < line.length; xPos++) {
@@ -114,15 +117,14 @@ data.forEach((line, yPos) => {
     }
 });
 
-// carts.forEach(cart => {
-//     console.log(cart);
-//     console.log(cart.coordString());
-// });
-
 // Run ticks, sort carts each tick, check for collisions as they occur
 let collision = false;
+let numCartsAlive = carts.length;
 
-while (collision === false) {
+// PART 1:
+// while (collision === false) {
+// PART 2:
+while (numCartsAlive > 1) {
     // Sort carts for right order this tick.
     carts.sort((a, b) => {
         if (a.y > b.y) {
@@ -142,13 +144,28 @@ while (collision === false) {
         let checkCollisions = carts.map(e => e.coordString());
         if (checkCollisions.length !== new Set(checkCollisions).size) {
             collision = true;
-            console.log(carts[i].coordString());
-            return true;
+            // console.log(carts[i].coordString());
+
+            // Set carts to dead if collided
+            let x = carts[i].x;
+            let y = carts[i].y;
+
+            carts.forEach(cart => {
+                if (cart.x === x && cart.y === y) {
+                    cart.alive = false;
+                }
+            });
+
+            // return true;
+
+            carts = carts.filter(cart => cart.alive === true);
+        }
+
+        numCartsAlive = carts.length;
+
+        if (numCartsAlive === 1) {
+            theLastCart = carts.filter(cart => cart.alive === true);
+            console.log(theLastCart);
         }
     });
 }
-
-// carts.forEach(cart => {
-//     console.log(cart);
-//     console.log(cart.coordString());
-// });
