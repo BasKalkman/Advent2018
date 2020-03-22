@@ -23,70 +23,77 @@ class Cart {
         if (this.dir === '>') {
             this.x++;
         }
-
         this.checkCurve();
         this.turnAtIntersection();
     }
 
     checkCurve() {
-        let trackComponent = data[y][x];
+        let trackComponent = data[this.y][this.x];
         if (trackComponent === '/') {
             if (this.dir === 'v' || this.dir === '^') {
                 this.turnRight();
-            }
-            if (this.dir === '<' || this.dir === '>') {
+            } else if (this.dir === '<' || this.dir === '>') {
                 this.turnLeft();
             }
         }
         if (trackComponent === '\\') {
             if (this.dir === 'v' || this.dir === '^') {
                 this.turnLeft();
-            }
-            if (this.dir === '<' || this.dir === '>') {
+            } else if (this.dir === '<' || this.dir === '>') {
                 this.turnRight();
             }
         }
     }
 
     turnAtIntersection() {
-        if (data[y][x] === '+') {
+        if (data[this.y][this.x] === '+') {
+            let turnOrder = ['left', 'straight', 'right'];
+            let turnTo = turnOrder[this.turnCount % turnOrder.length];
+
+            switch (turnTo) {
+                case 'left':
+                    this.turnLeft();
+                    break;
+                case 'right':
+                    this.turnRight();
+                    break;
+            }
+
             this.turnCount++;
-            if (this.turnCount % 1 === 0) {
-                this.turnLeft();
-            }
-            if (this.turnCount % 3 === 0) {
-                this.turnRight();
-            }
         }
     }
 
     turnRight() {
-        if (this.dir === 'v') {
-            this.dir = '<';
-        }
-        if (this.dir === '^') {
-            this.dir = '>';
-        }
-        if (this.dir === '>') {
-            this.dir = 'v';
-        }
-        if (this.dir === '<') {
-            this.dir = '^';
+        switch (this.dir) {
+            case 'v':
+                this.dir = '<';
+                break;
+            case '^':
+                this.dir = '>';
+                break;
+            case '<':
+                this.dir = '^';
+                break;
+            case '>':
+                this.dir = 'v';
+                break;
         }
     }
 
     turnLeft() {
-        if (this.dir === 'v') {
-            this.dir = '>';
-        }
-        if (this.dir === '^') {
-            this.dir = '<';
-        }
-        if (this.dir === '>') {
-            this.dir = '^';
-        }
-        if (this.dir === '<') {
-            this.dir = 'v';
+        switch (this.dir) {
+            case 'v':
+                this.dir = '>';
+                break;
+            case '^':
+                this.dir = '<';
+                break;
+            case '<':
+                this.dir = 'v';
+                break;
+            case '>':
+                this.dir = '^';
+                break;
         }
     }
 
@@ -98,19 +105,50 @@ class Cart {
 // Init all carts
 const carts = [];
 
-data.map((line, yPos) => {
+data.forEach((line, yPos) => {
     for (let xPos = 0; xPos < line.length; xPos++) {
-        if (line[xPos].match(/[\^\<\>v]/gi)) {
-            let dir = line[xPos].match(/[\^\<\>v]/gi)[0];
-            let newCart = new Cart(xPos, yPos, dir);
+        if (line[xPos].match(/[\^\<\>v]/)) {
+            let newCart = new Cart(xPos, yPos, line[xPos]);
             carts.push(newCart);
         }
     }
 });
 
-carts.forEach(cart => {
-    console.log(cart);
-    console.log(cart.coordString());
-});
+// carts.forEach(cart => {
+//     console.log(cart);
+//     console.log(cart.coordString());
+// });
 
 // Run ticks, sort carts each tick, check for collisions as they occur
+let collision = false;
+
+while (collision === false) {
+    // Sort carts for right order this tick.
+    carts.sort((a, b) => {
+        if (a.y > b.y) {
+            return 1;
+        } else if (a.y < b.y) {
+            return -1;
+        } else {
+            return a.x - b.x;
+        }
+    });
+
+    // Move the carts
+    carts.forEach((e, i) => {
+        e.move();
+
+        // Check for collisions
+        let checkCollisions = carts.map(e => e.coordString());
+        if (checkCollisions.length !== new Set(checkCollisions).size) {
+            collision = true;
+            console.log(carts[i].coordString());
+            return true;
+        }
+    });
+}
+
+// carts.forEach(cart => {
+//     console.log(cart);
+//     console.log(cart.coordString());
+// });
